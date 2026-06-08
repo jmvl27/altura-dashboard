@@ -216,6 +216,7 @@ def upload_ftp():
 
 if __name__ == "__main__":
     import sys
+    no_ftp = "--no-ftp" in sys.argv
     print(f"🕐 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} — Iniciando...")
     sys.stdout.flush()
     try:
@@ -223,8 +224,9 @@ if __name__ == "__main__":
         sys.stdout.flush()
         generate_dashboard(excel_bytes)
         sys.stdout.flush()
-        upload_ftp()
-        sys.stdout.flush()
+        if not no_ftp:
+            upload_ftp()
+            sys.stdout.flush()
         print("✅ Listo.")
     except Exception as e:
         import traceback

@@ -3,7 +3,12 @@ name: Actualizar Dashboard Altura Research
 on:
   schedule:
     - cron: '0 12 * * *'  # 8:00 AM hora Chile (UTC-4)
-  workflow_dispatch:        # permite correrlo manualmente desde GitHub
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   update:
@@ -21,9 +26,12 @@ jobs:
       - name: Instalar dependencias
         run: pip install openpyxl requests
 
-      - name: Generar y subir dashboard
-        env:
-          FTP_HOST: ${{ secrets.FTP_HOST }}
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASS: ${{ secrets.FTP_PASS }}
-        run: python dashboard.py
+      - name: Generar dashboard
+        run: python dashboard.py --no-ftp
+
+      - name: Publicar en GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          include_files: Dashboard_Campana.html
