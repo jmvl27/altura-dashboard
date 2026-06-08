@@ -215,8 +215,19 @@ def upload_ftp():
 
 
 if __name__ == "__main__":
+    import sys
     print(f"🕐 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} — Iniciando...")
-    excel_bytes = download_excel()
-    generate_dashboard(excel_bytes)
-    upload_ftp()
-    print("✅ Listo.")
+    sys.stdout.flush()
+    try:
+        excel_bytes = download_excel()
+        sys.stdout.flush()
+        generate_dashboard(excel_bytes)
+        sys.stdout.flush()
+        upload_ftp()
+        sys.stdout.flush()
+        print("✅ Listo.")
+    except Exception as e:
+        import traceback
+        print(f"❌ ERROR: {e}")
+        traceback.print_exc()
+        sys.exit(1)
