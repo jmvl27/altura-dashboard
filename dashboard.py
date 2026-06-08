@@ -198,17 +198,20 @@ def upload_ftp():
     path     = "/dashboard_ventas"
 
     print(f"📡 Conectando a {host}...")
-    with ftplib.FTP(host, timeout=30) as ftp:
-        ftp.login(user, password)
-        print(f"✅ Conectado como {user}")
-        try:
-            ftp.mkd(path)
-        except ftplib.error_perm:
-            pass
-        ftp.cwd(path)
-        with open(HTML_FILE, "rb") as f:
-            ftp.storbinary("STOR Dashboard_Campana.html", f)
-        print(f"✅ Subido a {host}{path}/Dashboard_Campana.html")
+    ftp = ftplib.FTP()
+    ftp.connect(host, 21, timeout=30)
+    ftp.login(user, password)
+    ftp.set_pasv(True)
+    print(f"✅ Conectado como {user}")
+    try:
+        ftp.mkd(path)
+    except ftplib.error_perm:
+        pass
+    ftp.cwd(path)
+    with open(HTML_FILE, "rb") as f:
+        ftp.storbinary("STOR Dashboard_Campana.html", f)
+    ftp.quit()
+    print(f"✅ Subido a {host}{path}/Dashboard_Campana.html")
 
 
 if __name__ == "__main__":
