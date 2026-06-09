@@ -7,8 +7,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   update:
@@ -29,9 +27,10 @@ jobs:
       - name: Generar dashboard
         run: python dashboard.py --no-ftp
 
-      - name: Publicar en GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
-          include_files: Dashboard_Campana.html
+      - name: Commit y push del dashboard
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add Dashboard_Campana.html
+          git commit -m "Actualizar dashboard [skip ci]" || echo "Sin cambios"
+          git push
